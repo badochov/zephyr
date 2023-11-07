@@ -105,23 +105,24 @@ int a4988_step(const struct device *dev, enum a4988_microstep microstep, bool cl
 	return 0;
 }
 
-int a4988_sleep(const struct device *dev, bool sleep)
+static int a4988_pm_action(const struct device *dev, enum pm_device_action action)
 {
 	const struct a4988_dev_config *config = dev->config;
 	int err;
 
-	if (sleep) {
+	switch (action) {
+	case PM_DEVICE_ACTION_SUSPEND:
 		return gpio_pin_set_dt(&config->gpio.sleep, 0);
+	case PM_DEVICE_ACTION_RESUME:
+		err = gpio_pin_set_dt(&config->gpio.sleep, 1);
+		if (err < 0) {
+			return err;
+		}
+		k_sleep(K_MSEC(1));
+		return 0;
+	default:
+		return -ENOTSUP;
 	}
-
-	err = gpio_pin_set_dt(&config->gpio.sleep, 1);
-	if (err < 0) {
-		return err;
-	}
-
-	k_sleep(K_MSEC(1));
-
-	return 0;
 }
 
 int a4988_reset(const struct device *dev, bool reset)
@@ -240,8 +241,9 @@ static int a4988_init(const struct device *dev)
 			.sleep = GPIO_DT_SPEC_INST_GET_OR(inst, sleep_gpios, {0}),                 \
 			.reset = GPIO_DT_SPEC_INST_GET_OR(inst, reset_gpios, {0}),                 \
 		}};                                                                                \
-                                                                                                   \
-	DEVICE_DT_INST_DEFINE(inst, a4988_init, NULL, NULL, &a4988_config_##inst, POST_KERNEL,     \
+	PM_DEVICE_DEFINE(a4988_##inst, a4988_pm_action);                                           \
+	DEVICE_DT_INST_DEFINE(inst, a4988_init, PM_DEVICE_GET(a4988_##inst), NULL,                 \
+			      &a4988_config_##inst, POST_KERNEL,                                   \
 			      CONFIG_KERNEL_INIT_PRIORITY_DEVICE, NULL);
 
 DT_INST_FOREACH_STATUS_OKAY(A4988_DEFINE)

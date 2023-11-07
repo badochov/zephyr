@@ -26,8 +26,6 @@ enum a4988_microstep {
 
 int a4988_step(const struct device *dev, enum a4988_microstep microstep, bool clockwise);
 
-int a4988_sleep(const struct device *dev, bool sleep);
-
 int a4988_enable(const struct device *dev, bool enable);
 
 int a4988_reset(const struct device *dev, bool reset);
