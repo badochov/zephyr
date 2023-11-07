@@ -112,9 +112,9 @@ static int a4988_pm_action(const struct device *dev, enum pm_device_action actio
 
 	switch (action) {
 	case PM_DEVICE_ACTION_SUSPEND:
-		return gpio_pin_set_dt(&config->gpio.sleep, 0);
+		return gpio_pin_set_dt(&config->gpio.sleep, 1);
 	case PM_DEVICE_ACTION_RESUME:
-		err = gpio_pin_set_dt(&config->gpio.sleep, 1);
+		err = gpio_pin_set_dt(&config->gpio.sleep, 0);
 		if (err < 0) {
 			return err;
 		}
@@ -130,7 +130,7 @@ int a4988_reset(const struct device *dev, bool reset)
 	const struct a4988_dev_config *config = dev->config;
 	int err;
 
-	err = gpio_pin_set_dt(&config->gpio.reset, !reset);
+	err = gpio_pin_set_dt(&config->gpio.reset, reset);
 	if (err < 0) {
 		return err;
 	}
@@ -144,7 +144,7 @@ int a4988_enable(const struct device *dev, bool enable)
 {
 	const struct a4988_dev_config *config = dev->config;
 
-	return gpio_pin_set_dt(&config->gpio.enable, !enable);
+	return gpio_pin_set_dt(&config->gpio.enable, enable);
 }
 
 static int a4988_init(const struct device *dev)
@@ -185,17 +185,17 @@ static int a4988_init(const struct device *dev)
 		return -ENODEV;
 	}
 
-	err = gpio_pin_configure_dt(&config->gpio.enable, GPIO_OUTPUT_LOW);
+	err = gpio_pin_configure_dt(&config->gpio.enable, GPIO_OUTPUT_LOW | GPIO_ACTIVE_LOW);
 	if (err < 0) {
 		LOG_ERR("Enable GPIO configuration failed");
 		return err;
 	}
-	err = gpio_pin_configure_dt(&config->gpio.sleep, GPIO_OUTPUT_HIGH);
+	err = gpio_pin_configure_dt(&config->gpio.sleep, GPIO_OUTPUT_HIGH | GPIO_ACTIVE_LOW);
 	if (err < 0) {
 		LOG_ERR("Sleep GPIO configuration failed");
 		return err;
 	}
-	err = gpio_pin_configure_dt(&config->gpio.reset, GPIO_OUTPUT_HIGH);
+	err = gpio_pin_configure_dt(&config->gpio.reset, GPIO_OUTPUT_HIGH | GPIO_ACTIVE_LOW);
 	if (err < 0) {
 		LOG_ERR("Reset GPIO configuration failed");
 		return err;
