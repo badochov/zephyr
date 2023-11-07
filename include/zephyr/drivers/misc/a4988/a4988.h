@@ -20,7 +20,7 @@ enum a4988_microstep {
 	a4988_full_step,
 	a4988_half_step,
 	a4988_quarter_step,
-	a4988_eigth_step,
+	a4988_eight_step,
 	a4988_sixteenth_step,
 };
 

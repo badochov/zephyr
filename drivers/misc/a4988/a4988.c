@@ -46,7 +46,7 @@ static int a4988_microstep_to_pins(enum a4988_microstep microstep, struct a4988_
 	case a4988_quarter_step:
 		*ms_pins = (struct a4988_ms_pins){0, 1, 0};
 		return 0;
-	case a4988_eigth_step:
+	case a4988_eight_step:
 		*ms_pins = (struct a4988_ms_pins){1, 1, 0};
 		return 0;
 	case a4988_sixteenth_step:
