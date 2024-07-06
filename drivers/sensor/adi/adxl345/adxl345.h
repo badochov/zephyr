@@ -68,10 +68,10 @@
 #define ADXL345_INTMAP_WATERMARK  (1 << 1)
 #define ADXL345_INTMAP_OVERRUN    (1 << 0)
 
-#define ADXL345_ENABLE_SLEEP_BIT      BIT(2)
-#define ADXL345_ENABLE_MEASURE_BIT    BIT(3)
-#define ADXL345_ENABLE_AUTO_SLEEP_BIT BIT(4)
-#define ADXL345_ENABLE_LINK_BIT       BIT(5)
+#define ADXL345_ENABLE_SLEEP_BIT      (1 << 2)
+#define ADXL345_ENABLE_MEASURE_BIT    (1 << 3)
+#define ADXL345_ENABLE_AUTO_SLEEP_BIT (1 << 4)
+#define ADXL345_ENABLE_LINK_BIT       (1 << 5)
 
 struct adxl345_dev_data {
 	unsigned int sample_number;
