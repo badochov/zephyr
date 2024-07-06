@@ -485,13 +485,13 @@ static int adxl345_set_activity_and_inactivity(const struct device *dev)
 		return rc;
 	}
 
-	if (CONFIG_ADXL345_ABS_REF_ACTIVITY) {
-		reg |= BIT(7);
-	}
+#if CONFIG_ADXL345_ABS_REF_ACTIVITY
+	reg |= BIT(7);
+#endif
 
-	if (CONFIG_ADXL345_ABS_REF_INACTIVITY) {
+#if CONFIG_ADXL345_ABS_REF_INACTIVITY
 		reg |= BIT(3);
-	}
+#endif
 
 	rc = adxl345_convert_axes(CONFIG_ADXL345_INACTIVITY_AXES, &axes);
 	if (rc < 0) {
@@ -563,19 +563,19 @@ static int adxl345_set_powerctl(const struct device *dev)
 {
 	uint8_t reg = 0;
 
-	if (CONFIG_ADXL345_AUTO_SLEEP) {
-		reg |= ADXL345_ENABLE_AUTO_SLEEP_BIT;
-	}
+#if CONFIG_ADXL345_AUTO_SLEEP
+	reg |= ADXL345_ENABLE_AUTO_SLEEP_BIT;
+#endif
 
-	if (CONFIG_ADXL345_LINK_MODE) {
-		reg |= ADXL345_ENABLE_LINK_BIT;
-	}
+#if CONFIG_ADXL345_LINK_MODE
+	reg |= ADXL345_ENABLE_LINK_BIT;
+#endif
 
 	reg |= ADXL345_ENABLE_MEASURE_BIT;
 
-	if (CONFIG_ADXL345_SLEEP) {
-		reg |= ADXL345_ENABLE_SLEEP_BIT;
-	}
+#if CONFIG_ADXL345_SLEEP
+	reg |= ADXL345_ENABLE_SLEEP_BIT;
+#endif
 
 	reg |= (CONFIG_ADXL345_WAKEUP_POLL_FREQ & 0x3);
 
